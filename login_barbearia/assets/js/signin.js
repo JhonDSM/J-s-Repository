@@ -18,8 +18,22 @@ function entrar(){
   let senhaLabel = document.querySelector('#senhaLabel');
   
   let msgError = document.querySelector('#msgError');
-  let listaUser = [];
+  // let listaUser = [];
   
+  let listaUser = [{
+    nomeCad: 'kaikyadm',
+    userCad: 'kaikyadm',
+    senhaCad: '54321',
+    nivelAcessoCad: '2'
+  },
+  {
+    nomeCad: 'aquilesbarbeiro',
+    userCad: 'aquilesbarbeiro',
+    senhaCad: '12345',
+    nivelAcessoCad: '1'
+  },
+];
+
   let userValid = {
     nome: '',
     user: '',
@@ -27,7 +41,12 @@ function entrar(){
     nivelAcesso: ''
   };
   
-  listaUser = JSON.parse(localStorage.getItem('listaUser'));
+  // acessar banco de dados e buscar usuário válido
+
+  // listaUser = JSON.parse(localStorage.getItem('listaUser'));
+
+  console.log(usuario.value);
+  console.log(senha.value);
   
   listaUser.forEach((item) => {
     if(usuario.value == item.userCad && senha.value == item.senhaCad){
@@ -60,12 +79,38 @@ function entrar(){
 }
 
 function verificarNivelAcesso(nivelAcesso) {
+  if (localStorage.getItem("token") == null) {
+    alert("Você precisa estar logado para acessar essa página");
+    window.location.href = "../signin.html";
+    return;
+  }
+
+  const userLogado = JSON.parse(localStorage.getItem("userLogado"));
+
   switch(nivelAcesso) {
-    case 'admin':
-      window.location.href = 'admin.html';
+    case '1':
+      if (userLogado.nivelAcesso != "1") {
+        window.location.href = "../home.html";
+        return;
+      }
       break;
-    case 'user':
-      window.location.href = 'user.html';
+    case '2':
+      if (userLogado.nivelAcesso != "2") {
+        window.location.href = "../adm.html";
+        return;
+      }
+      break;
+    default:
+      alert('Nível de acesso inválido');
+      return;
+  }
+
+  switch(nivelAcesso) {
+    case '1':
+      window.location.href = 'home.html';
+      break;
+    case '2':
+      window.location.href = 'adm.html';
       break;
     default:
       alert('Nível de acesso inválido');
